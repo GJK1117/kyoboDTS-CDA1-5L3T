@@ -95,4 +95,52 @@ uvicorn app.main:app --reload
 
 ### 테스트 실행
 
-## 추가 참고 사항
+## API Route 설명
+
+### 일반 도서 eBook 검색 API(임시)
+
+- **경로**: `/general_book/search`
+- **메서드**: `GET`
+- **파일위치**: `/app/api/general_book_search.py`
+- **설명**: 제목, 저자 등을 기준으로 일반 도서 eBook을 검색
+- **요청 파라미터**:
+  - `query` (string, 필수): 검색어
+  - `page` (integer, 선택): 페이지 번호, 기본값은 1
+- **응답**:
+  - **200 OK**: 검색된 도서 목록 (책 ID, 제목, 저자, 요약 등 포함)
+
+### 일반 도서 eBook 열람 API(임시)
+
+- **경로**: `/general_book/read/{book_id}`
+- **메서드**: `POST`
+- **파일위치**: `/app/api/general_book_read.py`
+- **설명**: 특정 도서 ID에 해당하는 일반 도서 eBook을 열람
+- **요청 경로 변수**:
+  - `book_id` (integer, 필수): 열람할 도서의 ID
+- **응답**:
+  - **200 OK**: 도서의 상세 정보 및 본문 내용
+  - **404 Not Found**: 해당 ID의 도서가 존재하지 않을 때 반환
+
+### 연재 소설 eBook 검색 API(임시)
+
+- **경로**: `/serial_novel/search`
+- **메서드**: `GET`
+- **파일위치**: `/app/api/serial_novel_search.py`
+- **설명**: 제목, 저자 등을 기준으로 연재 소설 eBook을 검색
+- **요청 파라미터**:
+  - `query` (string, 필수): 검색어
+  - `page` (integer, 선택): 페이지 번호, 기본값은 1
+- **응답**:
+  - **200 OK**: 검색된 연재 소설 목록 (소설 ID, 제목, 작가, 요약 등 포함)
+
+### 연재 소설 eBook 열람 API(임시)
+
+- **경로**: `/serial-novels/read/{book_id}`
+- **메서드**: `POST`
+- **파일위치**: `/app/api/serial_novel_read.py`
+- **설명**: 특정 연재 소설 ID에 해당하는 eBook을 열람
+- **요청 경로 변수**:
+  - `novel_id` (integer, 필수): 열람할 소설의 ID
+- **응답**:
+  - **200 OK**: 소설의 상세 정보 및 본문 내용
+  - **404 Not Found**: 해당 ID의 소설이 존재하지 않을 때 반환
