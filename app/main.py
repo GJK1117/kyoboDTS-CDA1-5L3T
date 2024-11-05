@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import api_router
+from app.core.s3_config import lifespan
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 app.include_router(api_router)
 
 # 모든 출처에서의 요청을 허용하기 위한 CORS 설정
