@@ -1,7 +1,7 @@
 from typing import List, Optional
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel import select, Session
-from app.core.rds_config import get_session
+from app.core.rds_config import get_read_replica_engine
 from app.schema.mysql_schema import Ebook, SerialBook
 
 router = APIRouter()
@@ -12,7 +12,7 @@ def search_books(
     q: str,
     type: int,
     last_id: Optional[int],  # 마지막 ID를 경로 매개변수로 사용
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_read_replica_engine)
 ):
     # 쿼리를 저장할 변수 초기화
     query = None
