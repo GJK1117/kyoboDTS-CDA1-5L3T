@@ -8,7 +8,7 @@ router = APIRouter()
 # 연재 소설 작품명과 화수를 입력하면 해당 epub을 반환하는 라우터
 @router.get("/read/{novel_id}/{num}")
 async def get_presigned_url(novel_id: str, num: int):
-    epub_key = f"serial_novels/{novel_id}/book{num}.epub"
+    epub_key = f"serial_novels/{novel_id}/chapter{num}.epub"
     
     try:
         # 프리사인드 URL 생성

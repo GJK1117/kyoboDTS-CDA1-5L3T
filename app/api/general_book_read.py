@@ -6,10 +6,10 @@ import boto3
 
 router = APIRouter()
 
-# 일반 도서의 ID와 장을 입력하면 해당 epub을 반환하는 라우터
-@router.get("/read/{book_id}/{chapter}")
+# 일반 도서의 ID을 입력하면 해당 epub을 반환하는 라우터
+@router.get("/read/{book_id}")
 async def get_presigned_url(book_id: str, chapter: int):
-    epub_key = f"general_books/{book_id}/chapter{chapter}.epub"
+    epub_key = f"general_books/{book_id}/book.epub"
     
     try:
         # 프리사인드 URL 생성
