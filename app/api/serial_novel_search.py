@@ -1,13 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from botocore.exceptions import ClientError
-from app.core.s3_config import s3_client, BUCKET_NAME
+from app.core.s3_config import get_s3_client, BUCKET_NAME
 import json
 
 router = APIRouter()
 
 @router.get("/search/{novel_id}")
-async def sn_search(novel_id: str):
+async def sn_search(novel_id: str, s3_client = Depends(get_s3_client)):
     metadata_path = f"serial_novels/{novel_id}/metadata.json"
     try:
         # S3에서 metadata.json 가져오기

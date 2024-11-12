@@ -1,14 +1,14 @@
 # 11월05일 업데이트 적용버전 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
-from app.core.s3_config import s3_client, BUCKET_NAME
+from app.core.s3_config import get_s3_client, BUCKET_NAME
 import boto3
 
 router = APIRouter()
 
 # 일반 도서의 ID을 입력하면 해당 epub을 반환하는 라우터
 @router.get("/read/{book_id}")
-async def get_presigned_url(book_id: str, chapter: int):
+async def get_presigned_url(book_id: str, s3_client = Depends(get_s3_client)):
     epub_key = f"general_books/{book_id}/book.epub"
     
     try:
