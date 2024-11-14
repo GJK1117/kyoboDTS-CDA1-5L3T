@@ -1,27 +1,39 @@
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
 from typing import List, Optional
 from enum import Enum
 
-# 모델 정의
-class Generalbook(SQLModel, table=True):
-    book_id: Optional[int] = Field(default=None, primary_key=True)  # 기본 키로 book_id 사용
-    book_name: str  # 책 제목
-    book_author: Optional[str] = None  # 작가 이름
-    book_thumbnail: str # 썸네일이 저장된 s3 주소
-
 # 요일을 정의하는 Enum 클래스
 class DayOfWeek(str, Enum):
-    monday = "Monday"
-    tuesday = "Tuesday"
-    wednesday = "Wednesday"
-    thursday = "Thursday"
-    friday = "Friday"
-    saturday = "Saturday"
-    sunday = "Sunday"
+    Monday = "Monday"
+    Tuesday = "Tuesday"
+    Wednesday = "Wednesday"
+    Thursday = "Thursday"
+    Friday = "Friday"
+    Saturday = "Saturday"
+    Sunday = "Sunday"
 
-class SerialBook(SQLModel, table=True):
-    series_id: Optional[int] = Field(default=None, primary_key=True)  # 기본 키로 series_id 사용
-    series_name: str  # 소설 제목
-    series_author: Optional[str] = None  # 작가 이름
-    series_thumbnail: str  # 썸네일 이미지의 S3 URL 주소
-    upload_day: DayOfWeek  # 요일 (ENUM 필드에 맞게 Enum 사용)
+# Book 테이블에 대응하는 모델
+class Book(SQLModel, table=True):
+    __tablename__ = "Book"  # 테이블 이름을 명시적으로 지정
+    book_id: Optional[int] = Field(default=None, primary_key=True)
+    book_name: str
+    book_author: Optional[str] = None
+    # book_thumbnail: Optional[str] = None  # 필요에 따라 추가
+
+# Series 테이블에 대응하는 모델
+class Series(SQLModel, table=True):
+    __tablename__ = "Series"  # 테이블 이름을 명시적으로 지정
+    series_id: Optional[int] = Field(default=None, primary_key=True)
+    series_name: str
+    series_author: Optional[str] = None
+    upload_day: DayOfWeek
+    # book_thumbnail: Optional[str] = None  # 필요에 따라 추가
+    contents: List["Content"] = Relationship(back_populates="series")  # Content와의 관계 설정
+
+# Content 테이블에 대응하는 모델 (복합 기본 키 사용)
+class Content(SQLModel, table=True):
+    __tablename__ = "Content"  # 테이블 이름을 명시적으로 지정
+    series_id: int = Field(foreign_key="Series.series_id", primary_key=True)
+    episode_id: int = Field(primary_key=True)
+    episode_title: str
+    series: Optional[Series] = Relationship(back_populates="contents")
