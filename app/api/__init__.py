@@ -13,4 +13,4 @@ api_router.include_router(gbs_router, prefix="/general_book", tags=["general_boo
 api_router.include_router(snr_router, prefix="/serial_novel", tags=["serial_novel"])
 api_router.include_router(sns_router, prefix="/serial_novel", tags=["serial_novel"])
 api_router.include_router(sb_router, prefix="/books", tags=["allbooks"])
-home_router.include_router(sb_router, prefix="/books", tags=["allbooks"])
+api_router.include_router(home_router, prefix="/books", tags=["allbooks"])
