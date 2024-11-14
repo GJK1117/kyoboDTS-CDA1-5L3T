@@ -34,4 +34,4 @@ def search_serial_books(
     if not results:
         return JSONResponse(status_code=404, content={"detail": "No more serial books found for the selected day."})
     
-    return JSONResponse(content=results)
+    return results
