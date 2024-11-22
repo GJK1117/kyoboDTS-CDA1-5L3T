@@ -18,7 +18,7 @@ class Book(SQLModel, table=True):
     book_id: Optional[int] = Field(default=None, primary_key=True)
     book_name: str
     book_author: Optional[str] = None
-    # book_thumbnail: Optional[str] = None  # 필요에 따라 추가
+    thumbnail: Optional[str] = None  # 필요에 따라 추가
 
 # Series 테이블에 대응하는 모델
 class Series(SQLModel, table=True):
@@ -27,7 +27,7 @@ class Series(SQLModel, table=True):
     series_name: str
     series_author: Optional[str] = None
     upload_day: DayOfWeek
-    # book_thumbnail: Optional[str] = None  # 필요에 따라 추가
+    thumbnail: Optional[str] = None  # 필요에 따라 추가
     contents: List["Content"] = Relationship(back_populates="series")  # Content와의 관계 설정
 
 # Content 테이블에 대응하는 모델 (복합 기본 키 사용)
