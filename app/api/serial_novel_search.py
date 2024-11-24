@@ -1,56 +1,53 @@
-from typing import List
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from botocore.exceptions import ClientError
-from sqlmodel import select, Session
 from app.core.s3_config import get_s3_client, BUCKET_NAME
-from app.core.rds_config import get_read_replica_engine
-from app.schema.mysql_schema import Series, Content
+import re
 import json
 
 router = APIRouter()
 
 @router.get("/search/{novel_name}")
-def sn_search(novel_name: str, s3_client = Depends(get_s3_client), session: Session = Depends(get_read_replica_engine)):
+def sn_search(novel_name: str, s3_client=Depends(get_s3_client)):
     metadata_path = f"serial_novels/{novel_name}/metadata.json"
+    prefix = f"serial_novels/{novel_name}/"
+    pattern = re.compile(r'chapter(\d+)\.epub')  # chapter{num}.epub 패턴
     
     try:
         # 1. S3에서 metadata.json 파일 가져오기
         response = s3_client.get_object(Bucket=BUCKET_NAME, Key=metadata_path)
         metadata_content = response['Body'].read().decode('utf-8')
         metadata = json.loads(metadata_content)
+        
+        # 2. S3에서 파일 목록 가져오기
+        response = s3_client.list_objects_v2(Bucket=BUCKET_NAME, Prefix=prefix)
+        if 'Contents' not in response:
+            raise HTTPException(status_code=404, detail="No files found in S3 for the given novel.")
 
-        # 2. Series 테이블에서 series_id 가져오기
-        series_query = select(Series.series_id).where(Series.series_name.ilike(novel_name))
-        series_result = session.exec(series_query).first()
-        
-        if not series_result:
-            raise HTTPException(status_code=404, detail="Serial novel not found in RDS.")
-        
-        # 3. Content 테이블에서 해당 series_id의 회차 정보 가져오기
-        episodes_query = (
-            select(Content.episode_id, Content.episode_title)
-            .where(Content.series_id == series_result)
-            .order_by(Content.episode_id)
-        )
-        episodes_result = session.exec(episodes_query).all()
-        
-        # 회차 정보 배열 생성
-        episodes = [
-            {
-                "episode_id": episode.episode_id,
-                "episode_title": episode.episode_title,
-            }
-            for episode in episodes_result
-        ]
-        
-        # metadata에 episodes 배열 추가
-        metadata["episodes"] = episodes
-        
-        # JSONResponse로 반환
+        # 3. chapter{num}.epub 파일만 필터링 및 회차 정보 생성
+        episodes = []
+        for obj in response['Contents']:
+            key = obj['Key']
+            match = pattern.search(key)
+            if match:
+                episode_id = int(match.group(1))
+                episodes.append({
+                    "episode_id": episode_id,
+                    "episode_title": f"{episode_id}화"
+                })
+
+        if not episodes:
+            raise HTTPException(status_code=404, detail="No chapters found in S3 for the given novel.")
+
+        # 4. episodes 배열을 metadata에 추가
+        metadata["episodes"] = sorted(episodes, key=lambda x: x["episode_id"])
+
+        # 5. JSONResponse로 반환
         return JSONResponse(content=metadata)
     
     except ClientError:
-        return JSONResponse(content={"detail": "Metadata not found in S3."}, status_code=404)
+        raise HTTPException(status_code=404, detail="Metadata not found in S3.")
     except HTTPException as e:
-        return JSONResponse(content={"detail": e.detail}, status_code=404)
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
