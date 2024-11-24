@@ -19,14 +19,3 @@ read_replica_engine = create_engine(
 def get_read_replica_engine():
     with Session(read_replica_engine) as session:
         yield session
-        
-# 어드민용 Primary RDS 연결
-DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://username:password@host/dbname")
-
-engine = create_engine(
-    f"mysql+pymysql://{DATABASE_URL}",
-    pool_size=10,          # 최대 10개의 연결을 유지
-    max_overflow=20,       # 최대 풀 크기 초과 시 20개의 추가 연결 허용
-    pool_timeout=30,       # 풀에 연결이 없을 때 최대 대기 시간(초)
-    pool_recycle=1800      # 연결을 30분마다 새로 고침하여 끊어짐 방지
-)

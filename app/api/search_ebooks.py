@@ -1,6 +1,5 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.responses import JSONResponse
 from sqlmodel import select, Session
 from app.core.rds_config import get_read_replica_engine
 from app.schema.mysql_schema import Book, Series

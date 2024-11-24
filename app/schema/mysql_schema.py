@@ -28,12 +28,3 @@ class Series(SQLModel, table=True):
     series_author: Optional[str] = None
     upload_day: DayOfWeek
     thumbnail: Optional[str] = None  # 필요에 따라 추가
-    contents: List["Content"] = Relationship(back_populates="series")  # Content와의 관계 설정
-
-# Content 테이블에 대응하는 모델 (복합 기본 키 사용)
-class Content(SQLModel, table=True):
-    __tablename__ = "Content"  # 테이블 이름을 명시적으로 지정
-    series_id: int = Field(foreign_key="Series.series_id", primary_key=True)
-    episode_id: int = Field(primary_key=True)
-    episode_title: str
-    series: Optional[Series] = Relationship(back_populates="contents")
