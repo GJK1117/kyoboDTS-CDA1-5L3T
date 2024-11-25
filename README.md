@@ -1,6 +1,34 @@
 # kyoboDTS-CDA1-5L3T
 교보DTS-Cloud architecture DX Academy(CDA) 최종 프로젝트 Backend 저장소
 
+---
+# **목차**
+
+1. [프로젝트 소개](#최종프로젝트-주제-e-book-api-프로젝트)
+2. [디렉토리 구조](#디렉토리-구조)
+3. [디렉토리 및 파일 설명](#디렉토리-및-파일-설명)
+   - [루트 디렉토리 `/`](#)
+   - [애플리케이션 디렉토리 `/app`](#app)
+     - [API 모듈 `/app/api`](#appapi)
+     - [환경 설정 `/app/core`](#appcore)
+     - [앱 진입점 `/app/main.py`](#appmainpy)
+   - [테스트 디렉토리 `/tests`](#tests)
+4. [추가된 Lambda 함수 설명](#추가된-lambda-함수-설명)
+   - [Lambda 함수 디렉토리](#1-lambda-함수-디렉토리)
+   - [Lambda 함수별 설명](#2-함수별-설명)
+     - [일반 도서 관리](#일반-도서-관리-lambda-함수)
+     - [연재 소설 관리](#연재-소설-관리-lambda-함수)
+5. [사용법](#사용법)
+   - [필요 라이브러리 설치](#필요-라이브러리)
+   - [애플리케이션 실행](#애플리케이션-실행)
+   - [테스트 실행](#테스트-실행)
+6. [API Route 설명](#api-route-설명)
+   - [일반 도서 eBook 검색 API](#일반-도서-ebook-검색-api임시)
+   - [일반 도서 eBook 열람 API](#일반-도서-ebook-열람-api임시)
+   - [연재 소설 eBook 검색 API](#연재-소설-ebook-검색-api임시)
+   - [연재 소설 eBook 열람 API](#연재-소설-ebook-열람-api임시)
+---
+
 # 최종프로젝트 주제: e-Book API 프로젝트
 e-Book 서비스를 운영하는 고객사의 요구사항에 따라 AWS 아키텍처를 구성 및 이에 따라 기존 Back-end code를 리팩토링하는 프로젝트
 
@@ -67,11 +95,11 @@ kyoboDTS-CDA1-5L3T
 
 프로젝트의 루트 디렉토리로, 프로젝트 설정 파일 및 주요 문서가 포함
 
-- **`.dockerignore`**: Docker image에 제외시킬 파일 정의
-- **`.gitignore`**: Git에서 무시할 파일 및 디렉토리를 지정
-- **`Dockerfile`**: Docker image를 생성 설정 파일
-- **`README.md`**: 프로젝트의 개요 및 문서
-- **`requirements.txt`**: 필요 라이브러리 설치 리스트
+> - **`.dockerignore`**: Docker image에 제외시킬 파일 정의
+> - **`.gitignore`**: Git에서 무시할 파일 및 디렉토리를 지정
+> - **`Dockerfile`**: Docker image를 생성 설정 파일
+> - **`README.md`**: 프로젝트의 개요 및 문서
+> - **`requirements.txt`**: 필요 라이브러리 설치 리스트
 
 ### `/app`
 
@@ -81,17 +109,17 @@ kyoboDTS-CDA1-5L3T
 
 eBook 서비스와 관련된 각 API 모듈이 포함된 디렉토리
 
-- **`__init__.py`**: `api` 패키지를 초기화하여 모듈을 애플리케이션 전반에서 가져올 수 있도록 설정
-- **`general_book_search.py`**: 일반 도서 검색 API 엔드포인트를 정의
-- **`general_book_read.py`**: 일반 도서 열람 API 엔드포인트를 정의
-- **`serial_novel_search.py`**: 연재 소설 검색 API 엔드포인트를 정의
-- **`serial_novel_read.py`**: 연재 소설 열람 API 엔드포인트를 정의
+>- **`__init__.py`**: `api` 패키지를 초기화하여 모듈을 애플리케이션 전반에서 가져올 수 있도록 설정
+>- **`general_book_search.py`**: 일반 도서 검색 API 엔드포인트를 정의
+>- **`general_book_read.py`**: 일반 도서 열람 API 엔드포인트를 정의
+>- **`serial_novel_search.py`**: 연재 소설 검색 API 엔드포인트를 정의
+>- **`serial_novel_read.py`**: 연재 소설 열람 API 엔드포인트를 정의
 
 #### `/app/core`
 
 애플리케이션의 주요 설정 및 환경 구성이 포함된 디렉토리
 
-- **`config.py`**: AWS 및 프로젝트 환경 변수, 데이터베이스 설정, API 키와 같은 애플리케이션 설정을 정의
+> - **`config.py`**: AWS 및 프로젝트 환경 변수, 데이터베이스 설정, API 키와 같은 애플리케이션 설정을 정의
 
 #### `/app/main.py`
 
@@ -101,11 +129,43 @@ FastAPI 애플리케이션의 진입점으로, 앱을 초기화하고 `api` 모�
 
 테스트 파일을 저장하기에 적합한 디렉토리. 테스트 코드는 `/app/api` 디렉토리 구조에 맞춰서 배치하면 관리하기 용이
 
-- 테스트 파일 예시:
-  - `/tests/api/test_general_book_search.py`
-  - `/tests/api/test_general_book_read.py`
-  - `/tests/api/test_serial_novel_search.py`
-  - `/tests/api/test_serial_novel_read.py`
+> - 테스트 파일 예시:
+>  - `/tests/api/test_general_book_search.py`
+>  - `/tests/api/test_general_book_read.py`
+>  - `/tests/api/test_serial_novel_search.py`
+>  - `/tests/api/test_serial_novel_read.py`
+
+---
+
+### **추가된 Lambda 함수 설명**
+
+#### **1. Lambda 함수 디렉토리**
+> **디렉토리 위치**: `Lambda_S3/`
+
+#### **2. 함수별 설명**
+
+> **일반 도서 관리 Lambda 함수**
+> - **`admin_delete_general_book.py`**
+>   - **역할**: S3에서 일반 도서 데이터 파일이 삭제될 때 RDS에서 해당 메타데이터를 삭제.
+>   - **트리거**: S3 DELETE 이벤트.
+> 
+> - **`admin_register_general_book.py`**
+>   - **역할**: 일반 도서 데이터 파일 또는 메타데이터 파일이 S3에 업로드되거나 수정될 경우, 이를 RDS 메타데이터에 추가 또는 업데이트.
+>   - **트리거**: S3 PUT/EDIT 이벤트.
+
+---
+
+#### **연재 소설 관리 Lambda 함수**
+
+> - **`admin_delete_serial_novel.py`**
+>   - **역할**: S3에서 연재 소설의 메타데이터 파일이 삭제되면, 이를 RDS 메타데이터에서 삭제.
+>   - **트리거**: S3 DELETE 이벤트.
+> 
+> - **`admin_register_serial_novel.py`**
+>   - **역할**: 연재 소설의 메타데이터 또는 관련 데이터 파일이 S3에 업로드되거나 수정될 경우, 이를 RDS 메타데이터에 등록 또는 업데이트.
+>   - **트리거**: S3 PUT/EDIT 이벤트.
+
+---
 
 ## 사용법
 
