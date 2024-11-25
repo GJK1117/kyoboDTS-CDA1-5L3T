@@ -6,23 +6,59 @@ e-Book 서비스를 운영하는 고객사의 요구사항에 따라 AWS 아키�
 
 ## 디렉토리 구조
 ```
-/kyoboDTS-CDA1-5L3T
-    /app
-        /api
-            __init__.py
-            general_book_search.py
-            general_book_read.py
-            serial_novel_search.py
-            serial_novel_read.py
-        /core
-            config.py
-        main.py
-    /tests
-    .dockerignore
-    .gitignore
-    Dockerfile
-    README.md
-    requirements.txt
+kyoboDTS-CDA1-5L3T
+├── Dockerfile
+├── Lambda_S3
+│   ├── README.MD
+│   ├── admin_delete_general_book.py
+│   ├── admin_delete_serial_novel.py
+│   ├── admin_register_general_book.py
+│   ├── admin_register_serial_novel.py
+│   └── admin_search_ebook.py
+├── README.md
+├── S3-RDS-Lambda(4종)
+│   ├── EDIT_books.py
+│   ├── EDIT_series.py
+│   ├── PUT_books.py
+│   ├── PUT_series.py
+│   ├── README.MD
+│   ├── [함수개요]datasync_general_book.MD
+│   ├── [함수개요] datasync_S3toRDS_updates.MD
+│   ├── [함수개요]datasync_S3toRDS_generalbooks.MD
+│   └── [함수개요]datasync_serial_novels.MD
+├── app
+│   ├── __init__.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── general_book_read.py
+│   │   ├── general_book_search.py
+│   │   ├── list_ebook.py
+│   │   ├── search_ebooks.py
+│   │   ├── serial_novel_read.py
+│   │   └── serial_novel_search.py
+│   ├── core
+│   │   ├── config.py
+│   │   ├── rds_config.py
+│   │   └── s3_config.py
+│   ├── data
+│   │   ├── README.MD
+│   │   └── metadata.json
+│   ├── main.py
+│   └── schema
+│       └── mysql_schema.py
+├── data
+│   ├── README.MD
+│   └── metadata.json
+├── pytest.ini
+├── requirements.txt
+└── tests
+    └── api
+        ├── test_general_book_read.py
+        ├── test_general_book_search.py
+        ├── test_list_ebooks.py
+        ├── test_search_ebooks.py
+        ├── test_serial_novel_read.py
+        └── test_serial_novel_search.py
 ```
 
 ## 디렉토리 및 파일 설명
