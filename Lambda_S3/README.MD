@@ -1,54 +1,69 @@
-# Metadata 저장 및 Pre-Signed URL 생성
+# 관리자 API Lambda 함수 설명
 
-## 기능 개요
+---
+## 개요
 
-이 Lambda 함수는 API Gateway를 통해 요청을 받아 S3 버킷에 메타데이터를 저장하고, EPUB 파일 및 썸네일 이미지를 업로드할 수 있는 Pre-Signed URL을 생성합니다.
+이 프로젝트는 5개의 Lambda 함수를 사용하여 관리자가 e-Book 플랫폼에 새로운 도서를 등록하고 관리할 수 있는 API를 제공합니다. 각 Lambda 함수는 API Gateway를 통해 HTTP 요청을 처리하며, S3 버킷과 상호 작용하여 파일 업로드 및 메타데이터 관리 기능을 수행합니다.
 
-## 주요 기능
+## Lambda 함수 목록
 
-1. **S3에 메타데이터 저장**
-    * API 요청에서 전달된 `metadata.json` 파일을 S3 버킷의 다음 경로에 저장합니다:
+### 1. `admin_register_general_book`
 
-      ```
-      serial_novels/{book_id}/metadata.json
-      ```
+*   **HTTP 메서드:** POST
+*   **경로:** `/general_books/{book_id}`
+*   **기능:**
+    *   요청 본문에서 `book_id` 및 도서 메타데이터 추출
+    *   S3 `general_books` 버킷에 `metadata.json` 파일 업로드
+    *   EPUB 파일 및 썸네일 이미지 업로드를 위한 Pre-signed URL 생성
+*   **목적:** 일반 도서 등록 및 파일 업로드를 위한 Pre-signed URL 제공
 
-2. **Pre-Signed URL 생성**
-    * EPUB 파일과 썸네일 이미지를 업로드할 수 있도록 5분 동안 유효한 Pre-Signed URL을 생성합니다.
-    * 생성된 URL의 경로는 다음과 같습니다:
-        * EPUB 파일: `serial_novels/{book_id}/chapter1.epub`
-        * 썸네일 이미지: `thumbnail/{book_id}.webp`
+### 2. `admin_register_serial_novel`
 
-3. **입력 데이터 검증**
-    * `metadata` 필드가 요청에 포함되지 않은 경우, HTTP 상태 코드 400을 반환합니다.
+*   **HTTP 메서드:** POST
+*   **경로:** `/serial_novels/{book_id}`
+*   **기능:**
+    *   요청 본문에서 `book_id` 및 연재 소설 메타데이터 추출
+    *   S3 `serial_novels` 버킷에 `metadata.json` 파일 업로드
+    *   EPUB 파일 및 썸네일 이미지 업로드를 위한 Pre-signed URL 생성
+*   **목적:** 연재 소설 등록 및 파일 업로드를 위한 Pre-signed URL 제공
 
-4. **에러 처리**
-    * S3 업로드 또는 URL 생성 중 오류 발생 시, 상태 코드 500과 함께 상세 오류 메시지를 반환합니다.
+### 3. `admin_delete_general_book`
 
-## 작동 방식
+*   **HTTP 메서드:** DELETE
+*   **경로:** `/general_books/{book_id}`
+*   **기능:**
+    *   `book_id`를 기반으로 S3 `general_books` 버킷에서 해당 도서의 모든 파일 및 폴더 삭제
+    *   S3 `thumbnail` 버킷에서 해당 도서의 썸네일 이미지 삭제
+*   **목적:** 일반 도서 삭제
 
-1. **API 요청 처리**
-    * 요청 경로 (`pathParameters`) 에서 `book_id` 값을 추출합니다.
-    * 요청 본문 (`body`) 에서 metadata JSON 데이터를 추출합니다.
+### 4. `admin_delete_serial_novel`
 
-2. **메타데이터 업로드**
-    * JSON 데이터를 `metadata.json` 파일로 변환하여 S3 버킷의 적절한 경로에 업로드합니다.
+*   **HTTP 메서드:** DELETE
+*   **경로:** `/serial_novels/{book_id}`
+*   **기능:**
+    *   `book_id`를 기반으로 S3 `serial_novels` 버킷에서 해당 연재 소설의 모든 파일 및 폴더 삭제
+    *   S3 `thumbnail` 버킷에서 해당 연재 소설의 썸네일 이미지 삭제
+*   **목적:** 연재 소설 삭제
 
-3. **Pre-Signed URL 생성**
-    * S3 버킷에 EPUB 파일과 썸네일 이미지를 업로드할 수 있는 Pre-Signed URL을 생성하여 반환합니다.
+### 5. `admin_search_ebook`
 
-4. **응답 반환**
-    * 성공 시, 다음 정보를 포함하는 HTTP 상태 코드 200 응답을 반환합니다:
-        * 성공 메시지
-        * EPUB 및 썸네일 업로드를 위한 Pre-Signed URL
+*   **HTTP 메서드:** GET
+*   **경로:** `/ebook/{book_id}`
+*   **기능:**
+    *   `book_id`를 기반으로 S3 `general_books` 및 `serial_novels` 버킷에서 `metadata.json` 파일 검색
+    *   검색된 메타데이터 파일 내용 반환
+*   **목적:**  `book_id`를 사용하여 도서 정보 검색
 
-## 예시 응답
+## 추가 정보
 
-### 성공 시
+*   각 Lambda 함수는 API Gateway와 통합되어 있으며, HTTP 요청을 통해 호출됩니다.
+*   Pre-signed URL은 제한된 시간 동안 유효하며, 해당 URL을 통해 S3에 파일을 업로드할 수 있습니다.
+*   모든 Lambda 함수는 CloudWatch를 통해 로그를 기록하며, 오류 발생 시 상세 정보를 확인할 수 있습니다.
+*   Lambda 함수는 IAM 역할을 통해 S3에 대한 접근 권한을 관리합니다.
+*   보안을 위해 API Gateway는 HTTPS 연결을 사용하며, AWS Certificate Manager를 통해 인증서를 관리합니다.
 
-```json
-{
-  "message": "Metadata saved successfully",
-  "epub_upload_url": "<pre-signed-epub-url>",
-  "thumbnail_upload_url": "<pre-signed-thumbnail-url>"
-}
+## 참고
+
+*   [Lambda 함수 코드](./lambda_functions)
+*   [API Gateway 설정](./api_gateway)
+*   [AWS Lambda 개발자 가이드](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
