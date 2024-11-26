@@ -30,7 +30,7 @@
 ---
 
 # 1. 최종프로젝트 주제: e-Book API 프로젝트
-E-book 서비스를 운영하는 고객사의 요구사항에 따라 AWS 아키텍처를 구성 및 이에 따라 기존 Back-end code가 정리되어있는 repository. 
+E-book 서비스를 운영하는 고객사의 요구사항에 따라 AWS 아키텍처를 구성 및 이에 따라 기존 Back-end code가 정리되어있는 refraction임. 
 
 ## 2. 디렉토리 구조
 
@@ -94,7 +94,7 @@ kyoboDTS-CDA1-5L3T
 
 ### 3.1 `/`
 
-프로젝트의 루트 디렉토리로, 프로젝트 설정 파일 및 주요 문서가 포함됩니다.
+프로젝트의 루트 디렉토리로, 프로젝트 설정 파일 및 주요 문서가 포함됨. 
 
 - **`.dockerignore`**: Docker 이미지 빌드시 제외할 파일 정의
 - **`.gitignore`**: Git에서 무시할 파일 및 디렉토리 지정
@@ -130,13 +130,13 @@ eBook 서비스와 관련된 각 API 모듈이 포함된 디렉토리입니다.
 
 #### 3.2.3 `/app/main.py`
 
-FastAPI 애플리케이션의 진입점으로, 앱을 초기화하고 `api` 모듈의 라우터를 등록하여 애플리케이션을 실행하는 파일입니다.
+FastAPI 애플리케이션의 진입점으로, 앱을 초기화하고 `api` 모듈의 라우터를 등록하여 애플리케이션을 실행하는 파일.
 
 ---
 
 ### 3.3 `/tests`
 
-테스트 파일을 저장하기에 적합한 디렉토리입니다. 테스트 코드는 `/app/api` 디렉토리 구조에 맞춰서 배치하면 관리하기 용이합니다.
+테스트 파일을 저장하기에 적합한 디렉토리입니다. 테스트 코드는 `/app/api` 디렉토리 구조에 맞춰서 배치하면 관리에 용이함.
 
 - 테스트 파일 예시:
   - `/tests/api/test_general_book_search.py`
@@ -165,8 +165,6 @@ FastAPI 애플리케이션의 진입점으로, 앱을 초기화하고 `api` 모�
 - **`admin_register_general_book.py`**
   - **역할**: 일반 도서 데이터 파일 또는 메타데이터 파일이 S3에 업로드되거나 수정될 경우, 이를 RDS 메타데이터에 추가 또는 업데이트.
   - **트리거**: S3 PUT/EDIT 이벤트.
-
----
 
 #### 4.2.2 연재 소설 관리 Lambda 함수
 
@@ -197,7 +195,7 @@ pip install -r requirements.txt
 
 ### 5.2 애플리케이션 실행
 
-FastAPI 애플리케이션을 실행하려면, 프로젝트의 루트 디렉토리에서 다음 명령어를 사용합니다:
+FastAPI 애플리케이션을 실행하려면, 프로젝트의 루트 디렉토리에서 다음 명령어를 사용:
 
 ```bash
 uvicorn app.main:app --reload
@@ -207,7 +205,7 @@ uvicorn app.main:app --reload
 
 ### 5.3 테스트 실행
 
-현재 테스트 명령어 및 파일은 `/tests` 디렉토리 내에서 실행할 수 있도록 구성되어 있습니다.
+현재 테스트 명령어 및 파일은 `/tests` 디렉토리 내에서 실행할 수 있도록 구성되어 있음.
 
 ---
 ## 6. API Route 설명
@@ -217,7 +215,7 @@ uvicorn app.main:app --reload
 - **경로**: `/general_book/search`
 - **메서드**: `GET`
 - **파일위치**: `/app/api/general_book_search.py`
-- **설명**: 제목, 저자 등을 기준으로 일반 도서 eBook을 검색합니다.
+- **설명**: 제목, 저자 등을 기준으로 일반 도서 eBook을 검색.
 - **요청 파라미터**:
   - `query` (string, 필수): 검색어
   - `page` (integer, 선택): 페이지 번호, 기본값은 1
@@ -244,7 +242,7 @@ uvicorn app.main:app --reload
 - **경로**: `/serial_novel/search`
 - **메서드**: `GET`
 - **파일위치**: `/app/api/serial_novel_search.py`
-- **설명**: 제목, 저자 등을 기준으로 연재 소설 eBook을 검색합니다.
+- **설명**: 제목, 저자 등을 기준으로 연재 소설 eBook을 검색.
 - **요청 파라미터**:
   - `query` (string, 필수): 검색어
   - `page` (integer, 선택): 페이지 번호, 기본값은 1
